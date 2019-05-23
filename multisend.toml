@@ -1,0 +1,15 @@
+# Адрес Minter
+address_account = "Mx..."
+# Приватный ключ аккаунта 
+privatkey = "privatkey"
+# Список получателей с суммами и монетами. Не более 100
+list_address = [["Mx...", "100", "COINNAME"], ["Mx..", "50", "COINNAME"]]
+# Nonce берем из https://explorer.minter.network/
+nonce = 94
+# Максимальный коэф. оплаты комиссии
+max_gas = 1
+# Монета для оплаты комиссии
+gas_coin = "BIP"
+
+
+
