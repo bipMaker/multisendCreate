@@ -1,12 +1,13 @@
 package main
 
 import (
-	"encoding/hex"
+	// "encoding/hex"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
+
+	// "math/rand"
 	"os"
-	"path/filepath"
+	// "path/filepath"
 	"strings"
 	"time"
 
@@ -27,14 +28,30 @@ type Config struct {
 	AccKey      string          `toml:"privatkey"`
 	ListAddress [][]interface{} `toml:"list_address"`
 	Nonce       int             `toml:"nonce"`
-	MaxGas      int             `toml:"max_gas"`
 	GasCoin     string          `toml:"gas_coin"`
 }
 
-func TempFileName(prefix, suffix string) string {
-	randBytes := make([]byte, 16)
-	rand.Read(randBytes)
-	return filepath.Join(prefix + hex.EncodeToString(randBytes) + suffix)
+func CreateFileTx(nonce int) error {
+	msndDt := m.TxMultiSendCoinData{
+		List:     oSndData,
+		Payload:  "BipMaker+1% multisend",
+		GasCoin:  conf.GasCoin,
+		GasPrice: 1,
+	}
+	signstr, err := sdk.GetTxSignMultiSendCoin(&msndDt, nonce)
+	if err != nil {
+		fmt.Println("Ошибка:", err.Error())
+		return err
+	}
+	TmpFileName := "txNonce" + strconv.Itoa(nonce) + ".bin"
+	fmt.Println("FileName:", TmpFileName)
+	err = ioutil.WriteFile(TmpFileName, signstr, 0777)
+	if err != nil {
+		// Если произошла ошибка выводим ее в консоль
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }
 
 func main() {
@@ -50,8 +67,13 @@ func main() {
 	} else {
 		fmt.Println("Данные файла конфигурации загружены!")
 	}
-
-	for _, d := range conf.ListAddress {
+	fNum := 0
+	sdk = m.SDK{
+		AccAddress:    conf.AccAddress,
+		AccPrivateKey: conf.AccKey,
+		ChainMainnet:  true,
+	}
+	for i, d := range conf.ListAddress {
 		str0 := ""
 		str1 := ""
 		coinX := ""
@@ -91,44 +113,16 @@ func main() {
 			fmt.Println("Ошибка при загрузке файла конфигурации:", str0, "неверный адрес получателя")
 			return
 		}
+		if (i+1)%100 == 0 {
+			CreateFileTx(conf.Nonce + fNum)
+			fNum += 1
+			oSndData = oSndData[:0]
+		}
 	}
-	if len(oSndData) > 99 {
-		fmt.Println("Задано больше 99 адресов")
-		return
-	}
-	rand.Seed(time.Now().UnixNano())
-	sdk = m.SDK{
-		AccAddress:    conf.AccAddress,
-		AccPrivateKey: conf.AccKey,
-		ChainMainnet:  true,
+	if len(oSndData) < 100 {
+		CreateFileTx(conf.Nonce + fNum)
 	}
 
-	Gas, _ := sdk.GetMinGas()
-	if Gas > int64(conf.MaxGas) {
-		// Если комиссия дофига, то ничего делать не будем
-		fmt.Println("Коэффициент оплаты комиссии больше заданного", conf.MaxGas)
-		return
-	}
-
-	msndDt := m.TxMultiSendCoinData{
-		List:     oSndData,
-		Payload:  "BipMaker+1% multisend",
-		GasCoin:  conf.GasCoin,
-		GasPrice: Gas,
-	}
-	fmt.Println("Nonce:", conf.Nonce)
-	signstr, err := sdk.GetTxSignMultiSendCoin(&msndDt, conf.Nonce)
-	if err != nil {
-		fmt.Println("Ошибка:", err.Error())
-		return
-	}
-	TxFileName := TempFileName("tx", ".bin")
-	err := ioutil.WriteFile(TxFileName, signstr, 0777)
-	if err != nil {
-		// Если произошла ошибка выводим ее в консоль
-		fmt.Println(err)
-		return
-	}
 	fmt.Println("Пауза 30 сек")
 	time.Sleep(time.Second * 30) // пауза 30 сек
 

@@ -2,12 +2,10 @@
 address_account = "Mx..."
 # Приватный ключ аккаунта 
 privatkey = "privatkey"
-# Список получателей с суммами и монетами. Не более 100
-list_address = [["Mx...", "100", "COINNAME"], ["Mx..", "50", "COINNAME"]]
+# Список получателей с суммами и монетами
+list_address = [["Mx1...", "100", "COINNAME1"], ["Mx2..", "50", "COINNAME2"]]
 # Nonce берем из https://explorer.minter.network/
 nonce = 94
-# Максимальный коэф. оплаты комиссии
-max_gas = 1
 # Монета для оплаты комиссии
 gas_coin = "BIP"
 
