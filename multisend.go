@@ -124,6 +124,7 @@ func main() {
 	}
 
 	fmt.Println("Пауза 30 сек")
+	fmt.Println("Благодарность можно отправлять на адрес Mx9e6ce0f9ebb86c810261f844c5bf9fc089a67fd5")
 	time.Sleep(time.Second * 30) // пауза 30 сек
 
 }

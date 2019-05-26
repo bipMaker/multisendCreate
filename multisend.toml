@@ -1,13 +1,10 @@
-# Адрес Minter
-address_account = "Mx..."
-# Приватный ключ аккаунта 
-privatkey = "privatkey"
-# Список получателей с суммами и монетами
-list_address = [["Mx1...", "100", "COINNAME1"], ["Mx2..", "50", "COINNAME2"]]
-# Nonce берем из https://explorer.minter.network/
-nonce = 94
-# Монета для оплаты комиссии
-gas_coin = "BIP"
-
-
-
+# РђРґСЂРµСЃ Minter
+address_account="Mx..."
+# РџСЂРёРІР°С‚РЅС‹Р№ РєР»СЋС‡ Р°РєРєР°СѓРЅС‚Р° 
+privatkey="privatkey"
+# РЎРїРёСЃРѕРє РїРѕР»СѓС‡Р°С‚РµР»РµР№ СЃ СЃСѓРјРјР°РјРё Рё РјРѕРЅРµС‚Р°РјРё
+list_address=[["Mx1...", "100", "COINNAME1"], ["Mx2..", "50", "COINNAME2"]]
+# Nonce Р±РµСЂРµРј РёР· https://explorer.minter.network/
+nonce=94
+# РњРѕРЅРµС‚Р° РґР»СЏ РѕРїР»Р°С‚С‹ РєРѕРјРёСЃСЃРёРё
+gas_coin="BIP"
